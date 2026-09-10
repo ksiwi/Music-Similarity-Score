@@ -79,7 +79,7 @@ def extract_features(audio_path):
     rms_mean = np.mean(rms, axis = 1)
     rms_std = np.std(rms, axis = 1)
     spectral_contrast_mean = np.mean(spectral_contrast, axis = 1)
-    spectral_contrast_std = np.mean(spectral_contrast, axis = 1)
+    spectral_contrast_std = np.std(spectral_contrast, axis = 1)
 
     #Takes in all the notable data and puts it into a vector
     feature_vector = np.concatenate([
@@ -96,3 +96,21 @@ def extract_features(audio_path):
 
     #Turns the 8d array into 1d
     return normalized_feature_vector.flatten()
+
+#This method uses the cosine similarity method (Find the angle between two vectors)
+def similarity_score_cosine(audio_1, audio_2):
+
+    vector_1 = extract_features(audio_1)
+    vector_2 = extract_features(audio_2)
+
+    print(f"Feature Vector Shape for {audio_1}: {vector_1.shape}")
+    print(f"Feature Vector Shape for {audio_2}: {vector_2.shape}")
+
+    #Changes the shape of the vector so that each value in each 1 value column goes into one row
+    vector_1 = vector_1.reshape(1, -1)
+    vector_2 = vector_2.reshape(1, -1)
+
+    cosine_matrix = cosine_similarity(vector_1, vector_2)
+    similarity_score = cosine_matrix[0][0]
+
+    return (similarity_score * 100)
